@@ -1,5 +1,6 @@
 plugins {
     id 'com.android.application'
+    id 'com.google.protobuf'
 }
 
 android {
@@ -28,6 +29,26 @@ android {
     }
 }
 
+protobuf {
+    protoc { artifact = 'com.google.protobuf:protoc:3.12.0' }
+    plugins {
+        grpc { artifact = 'io.grpc:protoc-gen-grpc-java:1.35.0'
+        }
+    }
+    generateProtoTasks {
+        all().each { task ->
+            task.builtins {
+                java { option 'lite' }
+            }
+            task.plugins {
+                grpc {
+                    option 'lite'
+                }
+            }
+        }
+    }
+}
+
 dependencies {
 
     implementation 'androidx.appcompat:appcompat:1.2.0'
@@ -36,4 +57,10 @@ dependencies {
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+
+    // GRPC Deps
+    implementation 'io.grpc:grpc-okhttp:1.35.0'
+    implementation 'io.grpc:grpc-protobuf-lite:1.35.0'
+    implementation 'io.grpc:grpc-stub:1.35.0'
+    implementation 'org.apache.tomcat:annotations-api:6.0.53'
 }
